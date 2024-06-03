@@ -1,18 +1,36 @@
-#Automatically assign a public IP address on creating EC2 instances
-Ec2Instance:
-  Type: AWS::EC2::Instance
-  Properties:
-    ImageId:
-      Fn::FindInMap:
-        - RegionMap
-        - Ref: AWS::Region
-        - AMI
-    KeyName:
-      Ref: KeyName
-    NetworkInterfaces:
-      - AssociatePublicIpAddress: "true"
-        DeviceIndex: "0"
-        GroupSet:
-          - Ref: myVPCEC2SecurityGroup
-        SubnetId:
-          Ref: PublicSubnet
+AWSTemplateFormatVersion: 2010-09-09
+Description: CloudFormation template to create an EC2 instance with a public IP address
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: String
+  PublicSubnet:
+    Description: Subnet ID of an existing public subnet in your VPC
+    Type: AWS::EC2::Subnet::Id
+Resources:
+  myVPCEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: "22"
+          ToPort: "22"
+          CidrIp: 0.0.0.0/0
+  Ec2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-0912f71e06545ad88
+      KeyName:
+        Ref: KeyName
+      NetworkInterfaces:
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet:
+            - Ref: myVPCEC2SecurityGroup
+          SubnetId:
+            Ref: PublicSubnet
+Outputs:
+  InstanceId:
+    Description: The instance ID
+    Value: Ec2Instance
