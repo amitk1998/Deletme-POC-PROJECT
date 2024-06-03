@@ -1,8 +1,41 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Description: A simple CloudFormation template to create an S3 bucket
-
+---
+AWSTemplateFormatVersion: 2010-09-09
 Resources:
   S3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: deleteme-s3-bucket-597
+      BucketName: testpocmain597s3
+      LoggingConfiguration:
+        DestinationBucketName: LoggingBucket
+        LogFilePrefix: testing-logs
+  LoggingBucket:
+    Type: AWS::S3::Bucket
+  S3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      BucketName: testpoclog597s3
+      Bucket: LoggingBucket
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - s3:PutObject
+            Effect: Allow
+            Principal:
+              Service: logging.s3.amazonaws.com
+            Resource:
+              - ""
+              - - "arn:aws:s3:::"
+                - LoggingBucket
+                - /*
+            Condition:
+              ArnLike:
+                aws:SourceArn:
+                  - S3Bucket
+                  - Arn
+              StringEquals:
+                aws:SourceAccount: ${AWS::AccountId}
+Outputs:
+  BucketName:
+    Value: S3Bucket
+    Description: Name of the sample Amazon S3 bucket with a logging configuration.
