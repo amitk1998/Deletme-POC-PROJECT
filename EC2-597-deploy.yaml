@@ -1,0 +1,4 @@
+template-file-path: ./ec2.yaml
+tags:
+  Name: gitsync
+  Project: ec2
