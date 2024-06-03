@@ -7,10 +7,12 @@ Resources:
       LoggingConfiguration:
         DestinationBucketName: LoggingBucket
         LogFilePrefix: testing-logs
+      BucketRegion: ap-south-1
   LoggingBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: testpoclog597s3
+      BucketRegion: ap-south-1
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
@@ -38,4 +40,4 @@ Resources:
 Outputs:
   BucketName:
     Value: S3Bucket
-    Description: Name of the sample Amazon S3 bucket with a logging configuration
+    Description: Name of the sample Amazon S3 bucket with a logging configuration.
