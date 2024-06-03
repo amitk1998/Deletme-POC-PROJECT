@@ -1,3 +1,4 @@
+#hb
 Resources:
    myInstance:
      Type: 'AWS::EC2::Instance'
