@@ -1,38 +1,46 @@
-AWSTemplateFormatVersion: 2010-09-09
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template to create two S3 buckets where one logs the access requests of the other
+
 Resources:
   S3Bucket:
-    Type: AWS::S3::Bucket
+    Type: 'AWS::S3::Bucket'
     Properties:
+      BucketName: my-main-bucket # Replace with your desired bucket name
       LoggingConfiguration:
-        DestinationBucketName: LoggingBucket
-        LogFilePrefix: testing-logs
+        DestinationBucketName: !Ref LoggingBucket
+        LogFilePrefix: 'access-logs/' # Optional. Prefix for log files.
+
   LoggingBucket:
-    Type: AWS::S3::Bucket
-  S3BucketPolicy:
-    Type: AWS::S3::BucketPolicy
+    Type: 'AWS::S3::Bucket'
     Properties:
-      Bucket: LoggingBucket
+      BucketName: my-logging-bucket # Replace with your desired bucket name
+
+  LoggingBucketPolicy:
+    Type: 'AWS::S3::BucketPolicy'
+    Properties:
+      Bucket: !Ref LoggingBucket
       PolicyDocument:
-        Version: 2012-10-17
+        Version: '2012-10-17'
         Statement:
-          - Action:
-              - s3:PutObject
-            Effect: Allow
+          - Effect: Allow
             Principal:
-              Service: logging.s3.amazonaws.com
-            Resource:
-              - ""
-              - - "arn:aws:s3:::"
-                - LoggingBucket
-                - /*
+              Service: s3.amazonaws.com
+            Action: 's3:PutObject'
+            Resource: !Sub '${LoggingBucket.Arn}/access-logs/*'
             Condition:
-              ArnLike:
-                aws:SourceArn:
-                  - S3Bucket
-                  - Arn
               StringEquals:
-                aws:SourceAccount: ${AWS::AccountId}
+                's3:x-amz-acl': 'bucket-owner-full-control'
+          - Effect: Allow
+            Principal:
+              Service: s3.amazonaws.com
+            Action: 's3:GetBucketAcl'
+            Resource: !GetAtt LoggingBucket.Arn
+
 Outputs:
-  BucketName:
-    Value: S3Bucket
-    Description: Name of the sample Amazon S3 bucket with a logging configuration.
+  MainBucketName:
+    Description: Name of the main S3 bucket
+    Value: !Ref S3Bucket
+
+  LoggingBucketName:
+    Description: Name of the logging S3 bucket
+    Value: !Ref LoggingBucket
