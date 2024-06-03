@@ -1,3 +1,4 @@
+---
 AWSTemplateFormatVersion: 2010-09-09
 Resources:
   S3Bucket:
@@ -7,12 +8,14 @@ Resources:
       LoggingConfiguration:
         DestinationBucketName: LoggingBucket
         LogFilePrefix: testing-logs
-      BucketRegion: ap-south-1
+      Regions:
+        - Bucket: testpocmain597s3
   LoggingBucket:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: testpoclog597s3
-      BucketRegion: ap-south-1
+      Regions:
+        - Bucket: testpoclog597s3
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
