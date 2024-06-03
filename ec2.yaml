@@ -4,7 +4,7 @@ Resources:
      Properties: 
         ImageId: ami-0912f71e06545ad88
         InstanceType: t2.micro
-        KeyName: my-key-pair
+        KeyName: Gravitee
         SecurityGroupIds:
           - sg-08ec084b990e1d09f
         UserData:
