@@ -1,14 +1,15 @@
-  MyEC2Instance: 
-    Type: AWS::EC2::Instance
-    Properties: 
-      ImageId: "ami-0912f71e06545ad88"
-      KeyName: "testkey"
-      BlockDeviceMappings: 
-      - DeviceName: "/dev/sdm"
-        Ebs: 
-          VolumeType: "io1"
-          Iops: "200"
-          DeleteOnTermination: "false"
-          VolumeSize: "20"
-      - DeviceName: "/dev/sdk"
-        NoDevice: {}
+Resources:
+   myInstance:
+     Type: 'AWS::EC2::Instance'
+     Properties: 
+        ImageId: ami-0912f71e06545ad88
+        InstanceType: t2.micro
+        KeyName: my-key-pair
+        SecurityGroupIds:
+          - sg-12a4c434
+        UserData:
+          Fn::Base64: !Sub |
+             #!/bin/bash
+             yum update -y
+             service httpd start
+             chkconfig httpd on
