@@ -9,10 +9,11 @@ Resources:
         LogFilePrefix: testing-logs
   LoggingBucket:
     Type: AWS::S3::Bucket
+    Properties:
+      BucketName: testpoclog597s3
   S3BucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
-      BucketName: testpoclog597s3
       Bucket: LoggingBucket
       PolicyDocument:
         Version: 2012-10-17
