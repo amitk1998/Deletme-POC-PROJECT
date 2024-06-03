@@ -1,4 +1,3 @@
-template-file-path: ./s3.yaml
-tags:
-  Name: gitsync
-  Project: S3
+template-file-path: s3.yaml
+parameters: {}
+tags: {}
