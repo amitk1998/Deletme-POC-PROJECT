@@ -1,46 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: CloudFormation template to create two S3 buckets where one logs the access requests of the other
+Description: A simple CloudFormation template to create an S3 bucket
 
 Resources:
   S3Bucket:
-    Type: 'AWS::S3::Bucket'
+    Type: AWS::S3::Bucket
     Properties:
-      BucketName: my-main-bucket # Replace with your desired bucket name
-      LoggingConfiguration:
-        DestinationBucketName: !Ref LoggingBucket597
-        LogFilePrefix: 'access-logs/' # Optional. Prefix for log files.
-
-  LoggingBucket:
-    Type: 'AWS::S3::Bucket'
-    Properties:
-      BucketName: my-logging-bucket # Replace with your desired bucket name
-
-  LoggingBucketPolicy:
-    Type: 'AWS::S3::BucketPolicy'
-    Properties:
-      Bucket: !Ref LoggingBucket597
-      PolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: s3.amazonaws.com
-            Action: 's3:PutObject'
-            Resource: !Sub '${LoggingBucket597.Arn}/access-logs/*'
-            Condition:
-              StringEquals:
-                's3:x-amz-acl': 'bucket-owner-full-control'
-          - Effect: Allow
-            Principal:
-              Service: s3.amazonaws.com
-            Action: 's3:GetBucketAcl'
-            Resource: !GetAtt LoggingBucket597.Arn
-
-Outputs:
-  MainBucketName:
-    Description: Name of the main S3 bucket
-    Value: !Ref S3Bucket597
-
-  LoggingBucketName:
-    Description: Name of the logging S3 bucket
-    Value: !Ref LoggingBucket597
+      BucketName: deleteme-s3-bucket-597
